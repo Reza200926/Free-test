@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Free Test Answer</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        input { padding: 10px; margin: 5px; width: 250px; display: block; margin-left: auto; margin-right: auto; }
+        button { padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        footer { margin-top: 20px; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<header>Free Test Answer</header>
+<h2>Register</h2>
+
+<form id="registerForm">
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="text" id="phone" placeholder="Nomor HP" required>
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <input type="password" id="confirmPassword" placeholder="Konfirmasi Password" required>
+    <button type="submit">Register</button>
+</form>
+
+<p>Sudah punya akun? <a href="login.html">Login di sini</a></p>
+
+<footer>by wrahtt</footer>
+
+<script>
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        let email = document.getElementById("email").value;
+        let phone = document.getElementById("phone").value;
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        let confirmPassword = document.getElementById("confirmPassword").value;
+
+        if (password !== confirmPassword) {
+            alert("Password dan konfirmasi password tidak cocok!");
+            return;
+        }
+
+        if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/.test(password)) {
+            alert("Password harus minimal 5 karakter, mengandung angka, huruf, dan simbol!");
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        users.push({ email, phone, username, password, isConfirmed: false });
+        localStorage.setItem("users", JSON.stringify(users));
+
+        alert("Registrasi berhasil! Tunggu konfirmasi admin.");
+        window.location.href = "login.html";
+    });
+</script>
+
+</body>
+</html>

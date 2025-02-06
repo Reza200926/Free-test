@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Free Test Answer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            font-size: 20px;
+        }
+        main {
+            margin: 20px;
+        }
+        select {
+            margin: 10px;
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+        }
+        .soal-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: left;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 5px auto;
+        }
+        button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+        .hapus-btn {
+            background: red;
+            color: white;
+        }
+        .notif-btn {
+            background: orange;
+            color: white;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>Free Test Answer</header>
+
+<main>
+    <h2>Halaman Admin</h2>
+
+    <label for="mapel">Pilih Mata Pelajaran:</label>
+    <select id="mapel" onchange="tampilkanSoal()">
+        <option value="">Pilih Mapel</option>
+        <option value="B. Indo">B. Indo</option>
+        <option value="B. Jawa">B. Jawa</option>
+        <option value="B. Inggris">B. Inggris</option>
+        <option value="MTK">MTK</option>
+        <option value="Prakarya">Prakarya</option>
+        <option value="IPS">IPS</option>
+        <option value="IPA">IPA</option>
+        <option value="PAI">PAI</option>
+        <option value="Informatika">Informatika</option>
+        <option value="PPKn">PPKn</option>
+        <option value="BTQ">BTQ</option>
+    </select>
+
+    <div id="soal-list"></div>
+
+    <h3>Notifikasi</h3>
+    <button class="notif-btn" onclick="lihatNotifikasi()">Lihat Notifikasi</button>
+    <div id="notif-list"></div>
+    
+    <button onclick="window.location.href='data.html'">Ke Halaman Data</button>
+
+</main>
+
+<footer>by wrahtt</footer>
+
+<script>
+    function tampilkanSoal() {
+        const mapel = document.getElementById("mapel").value;
+        const soalList = document.getElementById("soal-list");
+        soalList.innerHTML = "";
+
+        if (!mapel) return;
+
+        let soalData = JSON.parse(localStorage.getItem(mapel)) || Array(30).fill({ soal: "" });
+
+        soalData.forEach((soal, index) => {
+            const soalContainer = document.createElement("div");
+            soalContainer.classList.add("soal-container");
+
+            let imgTag = soal.soal 
+                ? `<img src="${soal.soal}" alt="Soal ${index + 1}">` 
+                : `<p>Belum ada gambar.</p>`;
+
+            soalContainer.innerHTML = `
+                <p>Soal ${index + 1}:</p>
+                ${imgTag}
+                <input type="file" accept="image/*" onchange="uploadGambar(event, ${index})">
+                <button class="hapus-btn" onclick="hapusGambar(${index})">Hapus</button>
+            `;
+
+            soalList.appendChild(soalContainer);
+        });
+
+        localStorage.setItem(mapel, JSON.stringify(soalData));
+    }
+
+    function uploadGambar(event, index) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const mapel = document.getElementById("mapel").value;
+            let soalData = JSON.parse(localStorage.getItem(mapel)) || Array(30).fill({ soal: "" });
+
+            soalData[index].soal = e.target.result;
+            localStorage.setItem(mapel, JSON.stringify(soalData));
+            tampilkanSoal();
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    function hapusGambar(index) {
+        const mapel = document.getElementById("mapel").value;
+        let soalData = JSON.parse(localStorage.getItem(mapel)) || Array(30).fill({ soal: "" });
+
+        soalData[index].soal = "";
+        localStorage.setItem(mapel, JSON.stringify(soalData));
+        tampilkanSoal();
+    }
+
+    function lihatNotifikasi() {
+        const notifList = document.getElementById("notif-list");
+        notifList.innerHTML = "";
+
+        let notifikasi = JSON.parse(localStorage.getItem("notifikasi")) || [];
+
+        if (notifikasi.length === 0) {
+            notifList.innerHTML = "<p>Tidak ada notifikasi.</p>";
+            return;
+        }
+
+        notifikasi.forEach((notif, index) => {
+            const notifItem = document.createElement("div");
+            notifItem.classList.add("soal-container");
+            notifItem.innerHTML = `<p>${notif.user} meminta jawaban untuk Soal ${notif.soal}</p>`;
+            notifList.appendChild(notifItem);
+        });
+
+        localStorage.setItem("notifikasi", JSON.stringify([]));
+    }
+
+    tampilkanSoal();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Free Test Answer</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        input { padding: 10px; margin: 5px; width: 250px; display: block; margin-left: auto; margin-right: auto; }
+        button { padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        footer { margin-top: 20px; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<header>Free Test Answer</header>
+<h2>Login</h2>
+
+<form id="loginForm">
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+</form>
+
+<p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
+
+<footer>by wrahtt</footer>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+
+        // Cek jika login sebagai admin
+        if (username === "Reza" && password === "reza26") {
+            alert("Login admin berhasil!");
+            window.location.href = "adminwrahtt.html";
+            return;
+        }
+
+        // Cek login sebagai user
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        let user = users.find(u => u.username === username && u.password === password);
+
+        if (!user) {
+            alert("Username atau password salah!");
+            return;
+        }
+
+        if (!user.isConfirmed) {
+            alert("Akun belum dikonfirmasi oleh admin!");
+            return;
+        }
+
+        alert("Login berhasil!");
+        window.location.href = "user.html";
+    });
+</script>
+
+</body>
+</html>

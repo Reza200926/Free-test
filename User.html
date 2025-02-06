@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User - Free Test Answer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            font-size: 20px;
+        }
+        main {
+            margin: 20px;
+        }
+        select {
+            margin: 10px;
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+        }
+        .soal-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: left;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 5px auto;
+        }
+        button {
+            background: red;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>Free Test Answer</header>
+
+<main>
+    <h2>Halaman User</h2>
+    <label for="mapel">Pilih Mata Pelajaran:</label>
+    <select id="mapel" onchange="tampilkanSoal()">
+        <option value="">Pilih Mapel</option>
+        <option value="B. Indo">B. Indo</option>
+        <option value="B. Jawa">B. Jawa</option>
+        <option value="B. Inggris">B. Inggris</option>
+        <option value="MTK">MTK</option>
+        <option value="Prakarya">Prakarya</option>
+        <option value="IPS">IPS</option>
+        <option value="IPA">IPA</option>
+        <option value="PAI">PAI</option>
+        <option value="Informatika">Informatika</option>
+        <option value="PPKn">PPKn</option>
+        <option value="BTQ">BTQ</option>
+    </select>
+    <div id="soal-list"></div>
+</main>
+
+<footer>by wrahtt</footer>
+
+<script>
+    function tampilkanSoal() {
+        const mapel = document.getElementById("mapel").value;
+        const soalList = document.getElementById("soal-list");
+        soalList.innerHTML = "";
+
+        if (!mapel) return;
+
+        const soalData = JSON.parse(localStorage.getItem(mapel)) || [];
+
+        for (let i = 1; i <= 30; i++) {
+            const soal = soalData[i - 1] || { soal: "" };
+
+            const soalContainer = document.createElement("div");
+            soalContainer.classList.add("soal-container");
+
+            let imgTag = soal.soal 
+                ? `<img src="${soal.soal}" alt="Soal ${i}">` 
+                : `<p>Maaf, admin belum upload gambar.</p>`;
+
+            soalContainer.innerHTML = `
+                <p>Soal ${i}:</p>
+                ${imgTag}
+                <button onclick="kirimNotif(${i})">Minta Jawaban</button>
+            `;
+            soalList.appendChild(soalContainer);
+        }
+    }
+
+    function kirimNotif(soalNo) {
+        let notifikasi = JSON.parse(localStorage.getItem("notifikasi")) || [];
+        notifikasi.push({ soal: soalNo, user: "User" });
+        localStorage.setItem("notifikasi", JSON.stringify(notifikasi));
+        alert(`Notifikasi dikirim untuk Soal ${soalNo}!`);
+    }
+
+    tampilkanSoal();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Register - Free Test Answer</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        table { width: 80%; margin: 20px auto; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid black; text-align: center; }
+        button { padding: 5px; margin: 2px; cursor: pointer; }
+        .confirm { background-color: #4CAF50; color: white; }
+        .delete { background-color: red; color: white; }
+    </style>
+</head>
+<body>
+
+<header>Free Test Answer</header>
+<h2>Data Register</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>No HP</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody id="userTable"></tbody>
+</table>
+
+<footer>by wrahtt</footer>
+
+<script>
+    function loadUsers() {
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        let tableBody = document.getElementById("userTable");
+        tableBody.innerHTML = "";
+
+        users.forEach((user, index) => {
+            let row = `<tr>
+                <td>${user.email}</td>
+                <td>${user.phone}</td>
+                <td>${user.username}</td>
+                <td>${user.password}</td>
+                <td>
+                    ${user.isConfirmed ? "✔️" : `<button class="confirm" onclick="confirmUser(${index})">Konfirmasi</button>`}
+                    <button class="delete" onclick="deleteUser(${index})">Hapus</button>
+                </td>
+            </tr>`;
+            tableBody.innerHTML += row;
+        });
+    }
+
+    function confirmUser(index) {
+        let users = JSON.parse(localStorage.getItem("users"));
+        users[index].isConfirmed = true;
+        localStorage.setItem("users", JSON.stringify(users));
+        loadUsers();
+    }
+
+    function deleteUser(index) {
+        let users = JSON.parse(localStorage.getItem("users"));
+        if (confirm("Apakah Anda yakin ingin menghapus user ini?")) {
+            users.splice(index, 1);
+            localStorage.setItem("users", JSON.stringify(users));
+            loadUsers();
+        }
+    }
+
+    window.onload = loadUsers;
+</script>
+
+</body>
+</html>
